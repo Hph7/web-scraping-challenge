@@ -34,13 +34,11 @@ def scrape():
 
     
     """JPL Mars Space Images - Featured Image"""
-    #Run browser
-    browser = init_browser()
     #Featured Image url
     url_img = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
     # Use splinter to navigate the site and add 5 sec delay in the execution
     browser.visit(url_img)
-    time.sleep(5)
+    # time.sleep(5)
     # HTML Object
     html1 = browser.html
     # Parse HTML with Beautiful Soup
@@ -62,7 +60,7 @@ def scrape():
     # Parse HTML with Beautiful Soup
     soup = BeautifulSoup(html, 'html.parser')
     # Save the tweet text for the weather report as a variable called mars_weather.
-    mars_weather = soup.find_all("article", attrs={"role":"article"})[0].text
+    mars_weather = soup.find_all("article", attrs={"role":"article"})[1].text
     #Replace all \n with space for continuity
     mars_weather = mars_weather.replace('\n', ' ')
     #Split to get rid of the initial part of the statement "Mars Weather@MarsWxReport·9hInSight "
@@ -80,8 +78,8 @@ def scrape():
     #set index
     table.set_index('Description', inplace = True)
     #convert to html
-    table.to_html('Resources/mars_facts.html')
-    
+    table_html = table.to_html()
+
     
     """Mars Hemispheres"""
     # * Visit the USGS Astrogeology site to obtain high resolution images for each of Mars hemispheres.
@@ -129,6 +127,7 @@ def scrape():
         'news_p':news_p,
         'featured_image_url' : featured_image_url,
         'mars_weather' : mars_weather,
+        'table': table_html,
         'hemisphere_image_urls' : hemisphere_image_urls
     }
 
@@ -142,5 +141,8 @@ def scrape():
     # mars_data['table'] = table
 
     # mars_data['hemisphere_image_urls'] = hemisphere_image_urls
+    browser.quit()
     
     return mars_data
+
+    
